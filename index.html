@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Social Media App</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: #f0f2f5;
+        color: #1c1e21;
+        line-height: 1.34;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .navbar {
+        background-color: #1877f2;
+        color: white;
+        padding: 8px 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar .logo {
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .navbar-links {
+        display: flex;
+        gap: 20px;
+      }
+      .post-header {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        width: 100px;
+        font-size: 14px;
+      }
+      .post-image {
+        width: 40px;
+        height: 40px;
+        border-radius: 90px;
+      }
+
+      .navbar-links a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      .card {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        padding: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+      }
+
+      input[type="text"],
+      input[type="password"],
+      textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #dddfe2;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+
+      button {
+        background-color: #1877f2;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 15px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      button:hover {
+        background-color: #166fe5;
+      }
+
+      .error-message {
+        color: #ff0000;
+        margin-bottom: 10px;
+      }
+
+      .success-message {
+        color: #4bb543;
+        margin-bottom: 10px;
+      }
+
+      .post {
+        border: 1px solid #dddfe2;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        background-color: white;
+      }
+
+      .post-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 5px;
+      }
+
+      .post-content {
+        margin-bottom: 10px;
+      }
+
+      .post-author {
+        font-size: 14px;
+        color: #65676b;
+        margin-bottom: 10px;
+      }
+
+      .post-actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .btn-edit {
+        background-color: #f0ad4e;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .tabs {
+        display: flex;
+        margin-bottom: 20px;
+      }
+
+      .tab {
+        padding: 10px 15px;
+        cursor: pointer;
+        background-color: #e4e6eb;
+        border: none;
+        margin-right: 10px;
+        border-radius: 5px;
+        font-weight: 500;
+      }
+
+      .tab.active {
+        background-color: #1877f2;
+        color: white;
+      }
+
+      .post-image {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <div class="logo">Social Media</div>
+      <div class="navbar-links">
+        <a href="#" id="nav-feed">Feed</a>
+        <a href="#" id="nav-my-posts" class="hidden">My Posts</a>
+        <a href="#" id="nav-profile" class="hidden">Profile</a>
+        <a href="#" id="nav-login">Login</a>
+        <a href="#" id="nav-register">Register</a>
+        <a href="#" id="nav-logout" class="hidden">Logout</a>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Login Section -->
+      <div id="login-section" class="tab-content active">
+        <div class="card">
+          <h2>Login</h2>
+          <div id="login-error" class="error-message"></div>
+          <div id="login-success" class="success-message"></div>
+          <form id="login-form">
+            <div class="form-group">
+              <label for="login-username">Username</label>
+              <input type="text" id="login-username" required />
+            </div>
+            <div class="form-group">
+              <label for="login-password">Password</label>
+              <input type="password" id="login-password" required />
+            </div>
+            <button type="submit">Login</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Register Section -->
+      <div id="register-section" class="tab-content">
+        <div class="card">
+          <h2>Register</h2>
+          <div id="register-error" class="error-message"></div>
+          <div id="register-success" class="success-message"></div>
+          <form id="register-form">
+            <div class="form-group">
+              <label for="register-username">Username</label>
+              <input type="text" id="register-username" required />
+            </div>
+            <div class="form-group">
+              <label for="register-password">Password</label>
+              <input type="password" id="register-password" required />
+            </div>
+            <button type="submit">Register</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Feed Section (All Posts) -->
+      <div id="feed-section" class="tab-content">
+        <div class="card">
+          <h2>Create New Post</h2>
+          <div id="post-error" class="error-message"></div>
+          <div id="post-success" class="success-message"></div>
+          <form id="post-form">
+            <div class="form-group">
+              <label for="post-title">Title</label>
+              <input type="text" id="post-title" required />
+            </div>
+            <div class="form-group">
+              <label for="post-content">Content</label>
+              <textarea id="post-content" rows="4" required></textarea>
+            </div>
+            <input type="hidden" id="post-id" />
+            <button type="submit" id="post-submit-btn">Create Post</button>
+            <button
+              type="button"
+              id="post-cancel-btn"
+              class="hidden"
+              style="background-color: #6c757d"
+            >
+              Cancel
+            </button>
+          </form>
+        </div>
+
+        <h2>News Feed</h2>
+        <div id="all-posts-container">
+          <!-- All posts will be added here dynamically -->
+        </div>
+      </div>
+
+      <!-- My Posts Section -->
+      <div id="my-posts-section" class="tab-content">
+        <h2>My Posts</h2>
+        <div id="posts-container">
+          <!-- User's posts will be added here dynamically -->
+        </div>
+      </div>
+
+      <!-- Profile Section -->
+      <div id="profile-section" class="tab-content">
+        <div class="card">
+          <h2>Profile</h2>
+          <div id="profile-info">
+            <p>
+              <strong>Username: </strong><span id="profile-username"></span>
+            </p>
+            <p><strong>User ID: </strong><span id="profile-id"></span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // API Base URL - Update with your server address
+      const API_URL = "http://localhost:3000";
+
+      // DOM Elements
+      const navFeed = document.getElementById("nav-feed");
+      const navMyPosts = document.getElementById("nav-my-posts");
+      const navProfile = document.getElementById("nav-profile");
+      const navLogin = document.getElementById("nav-login");
+      const navRegister = document.getElementById("nav-register");
+      const navLogout = document.getElementById("nav-logout");
+
+      const loginSection = document.getElementById("login-section");
+      const registerSection = document.getElementById("register-section");
+      const feedSection = document.getElementById("feed-section");
+      const myPostsSection = document.getElementById("my-posts-section");
+      const profileSection = document.getElementById("profile-section");
+
+      const loginForm = document.getElementById("login-form");
+      const registerForm = document.getElementById("register-form");
+      const postForm = document.getElementById("post-form");
+
+      const loginError = document.getElementById("login-error");
+      const registerError = document.getElementById("register-error");
+      const postError = document.getElementById("post-error");
+
+      const loginSuccess = document.getElementById("login-success");
+      const registerSuccess = document.getElementById("register-success");
+      const postSuccess = document.getElementById("post-success");
+
+      const postsContainer = document.getElementById("posts-container");
+      const allPostsContainer = document.getElementById("all-posts-container");
+      const postSubmitBtn = document.getElementById("post-submit-btn");
+      const postCancelBtn = document.getElementById("post-cancel-btn");
+
+      const profileUsername = document.getElementById("profile-username");
+      const profileId = document.getElementById("profile-id");
+
+      // State
+      let isLoggedIn = false;
+      let currentUser = null;
+      let authToken = localStorage.getItem("token");
+      let myPosts = [];
+      let allPosts = [];
+      let users = {}; // Cache for user info
+      let editingPostId = null;
+
+      // Check if user is logged in (token exists)
+      function checkAuthStatus() {
+        const token = localStorage.getItem("token");
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        if (token && user) {
+          isLoggedIn = true;
+          currentUser = user;
+          authToken = token;
+          updateUI();
+          fetchAllPosts();
+          fetchMyPosts();
+        } else {
+          isLoggedIn = false;
+          currentUser = null;
+          authToken = null;
+          updateUI();
+          fetchAllPosts(); // Still fetch all posts for non-logged in users
+        }
+      }
+
+      // Update UI based on auth status
+      function updateUI() {
+        if (isLoggedIn) {
+          navFeed.classList.remove("hidden");
+          navMyPosts.classList.remove("hidden");
+          navProfile.classList.remove("hidden");
+          navLogout.classList.remove("hidden");
+          navLogin.classList.add("hidden");
+          navRegister.classList.add("hidden");
+
+          profileUsername.textContent = currentUser.username;
+          profileId.textContent = currentUser.userId;
+
+          showSection(feedSection);
+        } else {
+          navFeed.classList.remove("hidden");
+          navMyPosts.classList.add("hidden");
+          navProfile.classList.add("hidden");
+          navLogout.classList.add("hidden");
+          navLogin.classList.remove("hidden");
+          navRegister.classList.remove("hidden");
+
+          // Hide post creation form for non-logged in users
+          document
+            .querySelector(".card:has(#post-form)")
+            .classList.add("hidden");
+
+          showSection(loginSection);
+        }
+      }
+
+      // Show a section and hide others
+      function showSection(section) {
+        const sections = [
+          loginSection,
+          registerSection,
+          feedSection,
+          myPostsSection,
+          profileSection,
+        ];
+        sections.forEach((s) => {
+          s.classList.remove("active");
+        });
+        section.classList.add("active");
+      }
+
+      // API Calls
+      async function registerUser(username, password) {
+        try {
+          const response = await fetch(`${API_URL}/register`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, password }),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.message || "Registration failed");
+          }
+
+          registerSuccess.textContent =
+            "Registration successful! You can now login.";
+          registerError.textContent = "";
+          registerForm.reset();
+
+          // Auto navigate to login
+          setTimeout(() => {
+            showSection(loginSection);
+            registerSuccess.textContent = "";
+          }, 2000);
+
+          return data;
+        } catch (error) {
+          registerError.textContent = error.message;
+          registerSuccess.textContent = "";
+          return null;
+        }
+      }
+
+      async function loginUser(username, password) {
+        try {
+          const response = await fetch(`${API_URL}/login`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, password }),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.message || "Login failed");
+          }
+
+          // Save token and user info
+          localStorage.setItem("token", data.token);
+
+          // Decode JWT to get user info
+          const payload = JSON.parse(atob(data.token.split(".")[1]));
+          const user = {
+            userId: payload.userId,
+            username: payload.username,
+          };
+
+          localStorage.setItem("user", JSON.stringify(user));
+
+          // Update state
+          isLoggedIn = true;
+          currentUser = user;
+          authToken = data.token;
+
+          loginSuccess.textContent = "Login successful!";
+          loginError.textContent = "";
+          loginForm.reset();
+
+          // Update UI
+          updateUI();
+          fetchAllPosts();
+          fetchMyPosts();
+
+          return data;
+        } catch (error) {
+          loginError.textContent = error.message;
+          loginSuccess.textContent = "";
+          return null;
+        }
+      }
+
+      async function fetchAllPosts() {
+        try {
+          // Let's assume you create a new API endpoint like '/posts/all' for fetching all posts
+          // If you don't have this endpoint, we'll need to modify your backend
+          const response = await fetch(`${API_URL}/posts/all`, {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch all posts");
+          }
+
+          allPosts = await response.json();
+          renderAllPosts();
+        } catch (error) {
+          console.error("Error fetching all posts:", error);
+          // Fallback solution: If you don't have a /posts/all endpoint, display a message
+          allPostsContainer.innerHTML =
+            "<p>Unable to fetch all posts. Make sure your backend supports this feature.</p>";
+        }
+      }
+
+      async function fetchMyPosts() {
+        if (!currentUser) return;
+
+        try {
+          const response = await fetch(
+            `${API_URL}/posts?userId=${currentUser.userId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${authToken}`,
+              },
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch my posts");
+          }
+
+          myPosts = await response.json();
+          renderMyPosts();
+        } catch (error) {
+          console.error("Error fetching my posts:", error);
+        }
+      }
+
+      async function getUserInfo(userId) {
+        // Check if we already have this user in cache
+        if (users[userId]) {
+          return users[userId];
+        }
+
+        try {
+          const response = await fetch(`${API_URL}/users/${userId}`, {
+            headers: {
+              Authorization: isLoggedIn ? `Bearer ${authToken}` : "",
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch user info");
+          }
+
+          const user = await response.json();
+          // Add to cache
+          users[userId] = user;
+          return user;
+        } catch (error) {
+          console.error("Error fetching user info:", error);
+          return { username: "Unknown User" };
+        }
+      }
+
+      async function createPost(title, content) {
+        try {
+          const response = await fetch(`${API_URL}/posts`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+            body: JSON.stringify({ title, content }),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.message || "Failed to create post");
+          }
+
+          postSuccess.textContent = "Post created successfully!";
+          postError.textContent = "";
+          postForm.reset();
+
+          // Refresh posts
+          fetchAllPosts();
+          fetchMyPosts();
+
+          return data;
+        } catch (error) {
+          postError.textContent = error.message;
+          postSuccess.textContent = "";
+          return null;
+        }
+      }
+
+      async function updatePost(id, title, content) {
+        try {
+          const response = await fetch(`${API_URL}/posts/${id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+            body: JSON.stringify({ title, content }),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.message || "Failed to update post");
+          }
+
+          postSuccess.textContent = "Post updated successfully!";
+          postError.textContent = "";
+          postForm.reset();
+
+          // Reset form state
+          editingPostId = null;
+          postSubmitBtn.textContent = "Create Post";
+          postCancelBtn.classList.add("hidden");
+
+          // Refresh posts
+          fetchAllPosts();
+          fetchMyPosts();
+
+          return data;
+        } catch (error) {
+          postError.textContent = error.message;
+          postSuccess.textContent = "";
+          return null;
+        }
+      }
+
+      // Render all posts to DOM
+      async function renderAllPosts() {
+        allPostsContainer.innerHTML = "";
+
+        if (allPosts.length === 0) {
+          allPostsContainer.innerHTML =
+            "<p>No posts available. Be the first to post something!</p>";
+          return;
+        }
+
+        for (const post of allPosts) {
+          // Fetch user info for each post
+          const user = await getUserInfo(post.user_id);
+
+          const postEl = document.createElement("div");
+          postEl.className = "post";
+
+          const canEdit =
+            isLoggedIn && currentUser && post.user_id === currentUser.userId;
+
+          postEl.innerHTML = `
+          <div class="post-header">
+            <img src="https://placehold.co/400x400" alt="Post Image" class="post-image" />
+            <h3 class="post-title">${post.title}</h3>
+            </div>
+            <p class="post-author">Posted by: ${user.username}</p>
+            <p class="post-content">${post.content}</p>
+            ${
+              canEdit
+                ? `
+            <div class="post-actions">
+                <button class="btn-edit" data-id="${post.id}">Edit</button>
+            </div>
+            `
+                : ""
+            }
+          `;
+
+          allPostsContainer.appendChild(postEl);
+        }
+
+        // Add event listeners to edit buttons
+        document
+          .querySelectorAll("#all-posts-container .btn-edit")
+          .forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const postId = btn.getAttribute("data-id");
+              const post = allPosts.find((p) => p.id == postId);
+
+              if (post) {
+                handleEditPost(post);
+              }
+            });
+          });
+      }
+
+      // Render my posts to DOM
+      function renderMyPosts() {
+        postsContainer.innerHTML = "";
+
+        if (myPosts.length === 0) {
+          postsContainer.innerHTML =
+            "<p>You haven't created any posts yet.</p>";
+          return;
+        }
+
+        myPosts.forEach((post) => {
+          const postEl = document.createElement("div");
+          postEl.className = "post";
+          postEl.innerHTML = `
+            <img src="https://via.placeholder.com/150" alt="Post Image" class="post-image" />
+            <h3 class="post-title">${post.title}</h3>
+            <p class="post-content">${post.content}</p>
+            <div class="post-actions">
+                <button class="btn-edit" data-id="${post.id}">Edit</button>
+            </div>
+          `;
+
+          postsContainer.appendChild(postEl);
+        });
+
+        // Add event listeners to edit buttons
+        document
+          .querySelectorAll("#posts-container .btn-edit")
+          .forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const postId = btn.getAttribute("data-id");
+              const post = myPosts.find((p) => p.id == postId);
+
+              if (post) {
+                handleEditPost(post);
+              }
+            });
+          });
+      }
+
+      function handleEditPost(post) {
+        // Populate form for editing
+        document.getElementById("post-title").value = post.title;
+        document.getElementById("post-content").value = post.content;
+        document.getElementById("post-id").value = post.id;
+
+        // Update UI for editing
+        editingPostId = post.id;
+        postSubmitBtn.textContent = "Update Post";
+        postCancelBtn.classList.remove("hidden");
+
+        // Switch to feed section where the form is
+        showSection(feedSection);
+
+        // Scroll to form
+        document
+          .getElementById("post-form")
+          .scrollIntoView({ behavior: "smooth" });
+      }
+
+      // Event Listeners
+      navFeed.addEventListener("click", (e) => {
+        e.preventDefault();
+        showSection(feedSection);
+        if (isLoggedIn) {
+          document
+            .querySelector(".card:has(#post-form)")
+            .classList.remove("hidden");
+        }
+      });
+
+      navMyPosts.addEventListener("click", (e) => {
+        e.preventDefault();
+        showSection(myPostsSection);
+      });
+
+      navProfile.addEventListener("click", (e) => {
+        e.preventDefault();
+        showSection(profileSection);
+      });
+
+      navLogin.addEventListener("click", (e) => {
+        e.preventDefault();
+        showSection(loginSection);
+      });
+
+      navRegister.addEventListener("click", (e) => {
+        e.preventDefault();
+        showSection(registerSection);
+      });
+
+      navLogout.addEventListener("click", (e) => {
+        e.preventDefault();
+        // Clear auth data
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        isLoggedIn = false;
+        currentUser = null;
+        authToken = null;
+        updateUI();
+      });
+
+      loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const username = document.getElementById("login-username").value;
+        const password = document.getElementById("login-password").value;
+        await loginUser(username, password);
+      });
+
+      registerForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const username = document.getElementById("register-username").value;
+        const password = document.getElementById("register-password").value;
+        await registerUser(username, password);
+      });
+
+      postForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const title = document.getElementById("post-title").value;
+        const content = document.getElementById("post-content").value;
+
+        if (editingPostId) {
+          await updatePost(editingPostId, title, content);
+        } else {
+          await createPost(title, content);
+        }
+      });
+
+      postCancelBtn.addEventListener("click", () => {
+        // Reset form
+        postForm.reset();
+        editingPostId = null;
+        postSubmitBtn.textContent = "Create Post";
+        postCancelBtn.classList.add("hidden");
+        postError.textContent = "";
+        postSuccess.textContent = "";
+      });
+
+      // Initialize app
+      checkAuthStatus();
+    </script>
+  </body>
+</html>
